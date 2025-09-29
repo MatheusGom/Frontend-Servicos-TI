@@ -1,6 +1,3 @@
-/* style.css */
-
-/* Estilo geral e variáveis */
 :root {
     --primary-color: #0056b3;
     --secondary-color: #007bff;
@@ -29,23 +26,21 @@ body {
     box-shadow: var(--box-shadow);
 }
 
-/* Header */
 header {
     background: var(--primary-color);
     color: white;
-    padding: 20px;
     text-align: center;
     border-bottom: 5px solid var(--secondary-color);
 }
 
 header img.logo {
-    max-width: 150px;
-    margin-bottom: 10px;
+    max-width: 110px;
+    margin-bottom: 0;
 }
 
 header h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 1.6em;
 }
 
 header p {
@@ -63,7 +58,46 @@ nav a:hover {
     text-decoration: underline;
 }
 
-/* Seções principais */
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.header-center h1 {
+    margin: 0;
+    font-size: 1.6em;
+}
+
+.slogan {
+    font-size: 1em;
+    margin-top: 3px;
+    color: white;
+    font-weight: bold;
+}
+
+header nav {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+header nav a {
+    color: white;
+    margin: 0;
+    font-size: 0.95em;
+}
+
 main {
     padding: 20px 0;
 }
@@ -78,7 +112,6 @@ h2 {
     padding-bottom: 10px;
 }
 
-/* Formulários */
 .form-container {
     max-width: 500px;
     margin: auto;
@@ -107,7 +140,7 @@ h2 {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Garante que padding não afete a largura total */
+    box-sizing: border-box;
 }
 
 .form-buttons {
@@ -147,7 +180,6 @@ button.secondary:hover {
     margin-top: 10px;
 }
 
-/* Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -169,7 +201,6 @@ tbody tr:nth-child(even) {
     background-color: var(--background-color);
 }
 
-/* Galeria de Fotos */
 .gallery {
     display: flex;
     flex-wrap: wrap;
@@ -185,21 +216,31 @@ tbody tr:nth-child(even) {
     border-radius: var(--border-radius);
 }
 
-/* Footer */
 footer {
     background: #333;
     color: white;
     text-align: center;
-    padding: 20px;
+    padding: 10px 0;
     margin-top: 30px;
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
+    min-height: 80px;
 }
 
 .footer-block {
     flex: 1;
     padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.footer-block h3 {
+    margin-top: 0;
+    margin-bottom: 0px;
+    font-size: 1.05em;
 }
 
 .footer-block ul {
@@ -210,4 +251,23 @@ footer {
 .footer-block img {
     height: 30px;
     margin: 0 5px;
+}
+
+.pagamento-imagens {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#fundadores table th:nth-child(2),
+#fundadores table td:nth-child(2) {
+    width: 120px;
+    min-width: 100px;
 }
