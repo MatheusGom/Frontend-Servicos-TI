@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Serviços - TI Solutions</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <header>
+        <img src="https://via.placeholder.com/150" alt="Logo da TI Solutions" class="logo">
+        <h1>Área do Cliente</h1>
+        <nav><a href="login.html">Sair</a></nav>
+    </header>
+
+    <div class="container">
+        <section id="userInfo">
+            <h2>Dados do Usuário</h2>
+            <p><strong>Nome:</strong> <span id="userName">Cliente Exemplo da Silva</span></p>
+            <p><strong>Login:</strong> <span id="userEmail">cliente.exemplo@email.com</span></p>
+        </section>
+
+        <section id="solicitacoesExistentes">
+            <h2>Minhas Solicitações</h2>
+            <table id="tabelaSolicitacoes">
+                <thead>
+                    <tr>
+                        <th>Data Pedido</th>
+                        <th>Nº Solicitação</th>
+                        <th>Serviço</th>
+                        <th>Status</th>
+                        <th>Preço</th>
+                        <th>Data Prevista</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-10-01</td>
+                        <td>2023001</td>
+                        <td>Consultoria em Segurança</td>
+                        <td>Concluído</td>
+                        <td>R$ 1.500,00</td>
+                        <td>2023-10-10</td>
+                        <td><button class="secondary" onclick="excluirLinha(this)">Excluir</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="novaSolicitacao">
+            <h2>Nova Solicitação de Serviço</h2>
+            <div class="form-group">
+                <label for="servicoTI">Serviço de TI:</label>
+                <select id="servicoTI" onchange="atualizarInfoServico()">
+                    <option value="">Selecione um serviço</option>
+                    <option value="suporte">Suporte Técnico Remoto</option>
+                    <option value="seguranca">Consultoria em Segurança</option>
+                    <option value="desenvolvimento">Desenvolvimento de Website</option>
+                </select>
+            </div>
+            <p><strong>Preço:</strong> <span id="precoLabel">-</span></p>
+            <p><strong>Prazo de Atendimento (dias):</strong> <span id="prazoLabel">-</span></p>
+            <p><strong>Data Prevista de Atendimento:</strong> <span id="dataPrevistaLabel">-</span></p>
+            <p><strong>Status:</strong> <span id="statusLabel">EM ELABORAÇÃO</span></p>
+            <button onclick="incluirSolicitacao()">Incluir Solicitação</button>
+        </section>
+    </div>
+
+    <script>
+        const servicosInfo = {
+            suporte: { preco: 250.00, prazo: 2 },
+            seguranca: { preco: 1500.00, prazo: 10 },
+            desenvolvimento: { preco: 5000.00, prazo: 30 }
+        };
+
+        function atualizarInfoServico() {
+            const servicoSelecionado = document.getElementById('servicoTI').value;
+            const precoLabel = document.getElementById('precoLabel');
+            const prazoLabel = document.getElementById('prazoLabel');
+            const dataPrevistaLabel = document.getElementById('dataPrevistaLabel');
+
+            if (servicoSelecionado && servicosInfo[servicoSelecionado]) {
+                const info = servicosInfo[servicoSelecionado];
+                precoLabel.textContent = `R$ ${info.preco.toFixed(2)}`;
+                prazoLabel.textContent = info.prazo;
+
+                const dataPrevista = new Date();
+                dataPrevista.setDate(dataPrevista.getDate() + info.prazo);
+                dataPrevistaLabel.textContent = dataPrevista.toLocaleDateString('pt-BR');
+            } else {
+                precoLabel.textContent = '-';
+                prazoLabel.textContent = '-';
+                dataPrevistaLabel.textContent = '-';
+            }
+        }
+
+        function incluirSolicitacao() {
+            const servicoSelecionado = document.getElementById('servicoTI');
+            if (!servicoSelecionado.value) {
+                alert('Por favor, selecione um serviço.');
+                return;
+            }
+
+            const tabela = document.getElementById('tabelaSolicitacoes').getElementsByTagName('tbody')[0];
+            const novaLinha = tabela.insertRow();
+            
+            const hoje = new Date();
+            const dataPedido = hoje.toISOString().split('T')[0];
+            const numSolicitacao = hoje.getTime().toString().slice(-7);
+            const servicoTexto = servicoSelecionado.options[servicoSelecionado.selectedIndex].text;
+            const status = 'EM ELABORAÇÃO';
+            const preco = document.getElementById('precoLabel').textContent;
+            const dataPrevista = document.getElementById('dataPrevistaLabel').textContent;
+
+            novaLinha.innerHTML = `
+                <td>${dataPedido}</td>
+                <td>${numSolicitacao}</td>
+                <td>${servicoTexto}</td>
+                <td>${status}</td>
+                <td>${preco}</td>
+                <td>${dataPrevista}</td>
+                <td><button class="secondary" onclick="excluirLinha(this)">Excluir</button></td>
+            `;
+        }
+
+        function excluirLinha(botao) {
+            const linha = botao.parentNode.parentNode;
+            linha.parentNode.removeChild(linha);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troca de Senha - TI Solutions</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <img src="https://via.placeholder.com/150" alt="Logo da TI Solutions" class="logo" style="display: block; margin: 0 auto 20px;">
+            <h2>Troca de Senha de Clientes</h2>
+            <form id="trocaSenhaForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="login">Login (e-mail):</label>
+                    <input type="email" id="login" name="login" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Nova Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmaSenha">Confirmação da Nova Senha:</label>
+                    <input type="password" id="confirmaSenha" name="confirmaSenha" required>
+                </div>
+
+                <div class="password-rules">
+                    <strong>Regras para a senha:</strong>
+                    <ul>
+                        <li>Pelo menos 6 caracteres.</li>
+                        <li>Pelo menos uma letra maiúscula.</li>
+                        <li>Pelo menos um número.</li>
+                        <li>Pelo menos um dos caracteres especiais permitidos: @ # $ % & ! ? / + = .</li>
+                        <li>Não são permitidos os caracteres: } ^ ; < ></li>
+                    </ul>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" onclick="trocarSenha()">Trocar Senha</button>
+                    <button type="button" class="secondary" onclick="limparCampos()">Limpar</button>
+                </div>
+                 <div style="text-align: center; margin-top: 15px;">
+                    <a href="login.html">Voltar para o Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function validarEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function trocarSenha() {
+            const login = document.getElementById('login').value;
+            const senha = document.getElementById('senha').value;
+            const confirmaSenha = document.getElementById('confirmaSenha').value;
+
+            if (!login || !senha || !confirmaSenha) {
+                alert('Todos os campos devem ser preenchidos.');
+                return;
+            }
+
+            if (!validarEmail(login)) {
+                alert('O formato do e-mail é inválido.');
+                return;
+            }
+            
+            if (senha !== confirmaSenha) {
+                alert('A senha e a confirmação de senha não coincidem.');
+                return;
+            }
+
+            // Validações de complexidade da senha
+            if (senha.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
+            if (!/[A-Z]/.test(senha)) {
+                alert('A senha deve conter pelo menos uma letra maiúscula.');
+                return;
+            }
+            if (!/\d/.test(senha)) {
+                alert('A senha deve conter pelo menos um número.');
+                return;
+            }
+            if (!/[@#$%&!?/+=.]/.test(senha)) {
+                alert('A senha deve conter um dos caracteres especiais permitidos: @ # $ % & ! ? / + = .');
+                return;
+            }
+            if (/[}\^;<>]/.test(senha)) {
+                alert('A senha contém caracteres não permitidos: } ^ ; < >');
+                return;
+            }
+
+            alert('Validação realizada com sucesso!');
+            // Volta para a página anterior (login)
+            window.history.back();
+        }
+
+        function limparCampos() {
+            const loginInput = document.getElementById('login');
+            document.getElementById('trocaSenhaForm').reset();
+            loginInput.focus();
+        }
+    </script>
+</body>
+</html>
