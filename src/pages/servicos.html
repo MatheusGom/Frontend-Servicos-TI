@@ -36,6 +36,15 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td>2023-11-05</td>
+                        <td>2023002</td>
+                        <td>Suporte Técnico Remoto</td>
+                        <td>Em andamento</td>
+                        <td>R$ 250,00</td>
+                        <td>2023-11-07</td>
+                        <td><button class="secondary" onclick="excluirLinha(this)">Excluir</button></td>
+                    </tr>
+                    <tr>
                         <td>2023-10-01</td>
                         <td>2023001</td>
                         <td>Consultoria em Segurança</td>
@@ -73,6 +82,26 @@
             seguranca: { preco: 1500.00, prazo: 10 },
             desenvolvimento: { preco: 5000.00, prazo: 30 }
         };
+
+        // Função para ordenar a tabela pela data do pedido 
+        function ordenarTabela() {
+            const tabela = document.getElementById('tabelaSolicitacoes');
+            const tbody = tabela.querySelector('tbody');
+            const linhas = Array.from(tbody.querySelectorAll('tr'));
+
+            linhas.sort((a, b) => {
+                const dataA = new Date(a.cells[0].textContent.split('-').join('/'));
+                const dataB = new Date(b.cells[0].textContent.split('-').join('/'));
+                return dataA - dataB; // Ordena em ordem crescente
+            });
+
+            // Limpa e reapresenta as linhas ordenadas
+            linhas.forEach(linha => tbody.appendChild(linha));
+        }
+
+        // Chama a função de ordenação quando a página carrega
+        document.addEventListener('DOMContentLoaded', ordenarTabela);
+
 
         function atualizarInfoServico() {
             const servicoSelecionado = document.getElementById('servicoTI').value;
@@ -122,6 +151,9 @@
                 <td>${dataPrevista}</td>
                 <td><button class="secondary" onclick="excluirLinha(this)">Excluir</button></td>
             `;
+            
+            // Reordena a tabela após adicionar um novo item
+            ordenarTabela();
         }
 
         function excluirLinha(botao) {

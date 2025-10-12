@@ -74,84 +74,107 @@
         </div>
     </div>
     <script>
-        // Adiciona a máscara de CPF
-        document.getElementById('cpf').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\D/g, '');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-            e.target.value = value;
-        });
+    // Adiciona a máscara de CPF
+    document.getElementById('cpf').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = value;
+    });
 
-        function validarCPF(cpf) {
-            cpf = cpf.replace(/[^\d]+/g,'');	
-            if(cpf == '') return false;	
-            if (cpf.length != 11 || /^(\d)\1+$/.test(cpf)) return false;	
-            let add = 0;	
-            for (let i=0; i < 9; i ++) add += parseInt(cpf.charAt(i)) * (10 - i);	
-            let rev = 11 - (add % 11);	
-            if (rev == 10 || rev == 11) rev = 0;	
-            if (rev != parseInt(cpf.charAt(9))) return false;		
-            add = 0;	
-            for (let i = 0; i < 10; i ++) add += parseInt(cpf.charAt(i)) * (11 - i);	
-            rev = 11 - (add % 11);	
-            if (rev == 10 || rev == 11) rev = 0;	
-            if (rev != parseInt(cpf.charAt(10))) return false;		
-            return true;   
+    // Adiciona a máscara de Celular
+    document.getElementById('celular').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+        e.target.value = value;
+    });
+
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g,'');	
+        if(cpf == '') return false;	
+        if (cpf.length != 11 || /^(\d)\1+$/.test(cpf)) return false;	
+        let add = 0;	
+        for (let i=0; i < 9; i ++) add += parseInt(cpf.charAt(i)) * (10 - i);	
+        let rev = 11 - (add % 11);	
+        if (rev == 10 || rev == 11) rev = 0;	
+        if (rev != parseInt(cpf.charAt(9))) return false;		
+        add = 0;	
+        for (let i = 0; i < 10; i ++) add += parseInt(cpf.charAt(i)) * (11 - i);	
+        rev = 11 - (add % 11);	
+        if (rev == 10 || rev == 11) rev = 0;	
+        if (rev != parseInt(cpf.charAt(10))) return false;		
+        return true;   
+    }
+    
+    function validarCelular(celular) {
+        const value = celular.replace(/\D/g, '');
+        // Valida o formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
+        const regex = /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/;
+        return regex.test(value);
+    }
+
+    function realizarInclusao() {
+        // Validações de senha (reutilizadas da troca de senha)
+        const senha = document.getElementById('senha').value;
+        const confirmaSenha = document.getElementById('confirmaSenha').value;
+        if (senha !== confirmaSenha) { alert('As senhas não coincidem.'); return; }
+        if (senha.length < 6 || !/[A-Z]/.test(senha) || !/\d/.test(senha) || !/[@#$%&!?/+=.]/.test(senha) || /[}\^;<>]/.test(senha)) {
+            alert('A senha não atende aos critérios de segurança.');
+            return;
         }
 
-        function realizarInclusao() {
-            // Validações de senha (reutilizadas da troca de senha)
-            const senha = document.getElementById('senha').value;
-            const confirmaSenha = document.getElementById('confirmaSenha').value;
-            if (senha !== confirmaSenha) { alert('As senhas não coincidem.'); return; }
-            if (senha.length < 6 || !/[A-Z]/.test(senha) || !/\d/.test(senha) || !/[@#$%&!?/+=.]/.test(senha) || /[}\^;<>]/.test(senha)) {
-                alert('A senha não atende aos critérios de segurança.');
-                return;
-            }
-
-            // Validação de nome
-            const nome = document.getElementById('nome').value.trim();
-            if (!nome) { alert('O nome deve ser preenchido.'); return; }
-            const nomePartes = nome.split(' ');
-            if (nomePartes.length < 2 || nomePartes[0].length < 2) {
-                alert('O nome deve ter pelo menos duas palavras e a primeira deve ter no mínimo 2 caracteres.');
-                return;
-            }
-            if (/[^a-zA-Z\s]/.test(nome)) {
-                 alert('O nome não deve conter números ou caracteres especiais.');
-                 return;
-            }
-            
-            // Validação de CPF
-            const cpf = document.getElementById('cpf').value;
-            if (!cpf) { alert('O CPF deve ser preenchido.'); return; }
-            if (!validarCPF(cpf)) { alert('O CPF informado é inválido.'); return; }
-
-            // Validação de data de nascimento (maior de 18 anos)
-            const dataNascimento = new Date(document.getElementById('nascimento').value);
-            if (isNaN(dataNascimento.getTime())) { alert('A data de nascimento deve ser preenchida.'); return; }
-            const hoje = new Date();
-            let idade = hoje.getFullYear() - dataNascimento.getFullYear();
-            const m = hoje.getMonth() - dataNascimento.getMonth();
-            if (m < 0 || (m === 0 && hoje.getDate() < dataNascimento.getDate())) {
-                idade--;
-            }
-            if (idade < 18) {
-                alert('O cliente deve ser maior de 18 anos.');
-                return;
-            }
-            
-            alert('Validação realizada com sucesso!');
+        // Validação de nome
+        const nome = document.getElementById('nome').value.trim();
+        if (!nome) { alert('O nome deve ser preenchido.'); return; }
+        const nomePartes = nome.split(' ');
+        if (nomePartes.length < 2 || nomePartes[0].length < 2) {
+            alert('O nome deve ter pelo menos duas palavras e a primeira deve ter no mínimo 2 caracteres.');
+            return;
+        }
+        // Ajuste na validação de caracteres especiais para o nome 
+        if (/[@#$%&!?/+=.}{\^;<>]/.test(nome)) {
+             alert('O nome não deve conter caracteres especiais.');
+             return;
         }
         
-        function limparCampos() {
-            document.getElementById('cadastroForm').reset();
-            // Reseta os valores default manualmente
-            document.querySelector('input[name="estadoCivil"][value="solteiro"]').checked = true;
-            document.getElementById('escolaridade').value = '2completo';
-            document.getElementById('email').focus();
+        // Validação de CPF
+        const cpf = document.getElementById('cpf').value;
+        if (!cpf) { alert('O CPF deve ser preenchido.'); return; }
+        if (!validarCPF(cpf)) { alert('O CPF informado é inválido.'); return; }
+
+        // Validação de data de nascimento (maior de 18 anos)
+        const dataNascimento = new Date(document.getElementById('nascimento').value);
+        if (isNaN(dataNascimento.getTime())) { alert('A data de nascimento deve ser preenchida.'); return; }
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+        const m = hoje.getMonth() - dataNascimento.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < dataNascimento.getDate())) {
+            idade--;
         }
-    </script>
+        if (idade < 18) {
+            alert('O cliente deve ser maior de 18 anos.');
+            return;
+        }
+
+        // Validação do celular (se preenchido) 
+        const celular = document.getElementById('celular').value;
+        if (celular && !validarCelular(celular)) {
+            alert('O formato do celular é inválido. Use (XX) XXXXX-XXXX.');
+            return;
+        }
+        
+        alert('Validação realizada com sucesso!');
+    }
+    
+    function limparCampos() {
+        document.getElementById('cadastroForm').reset();
+        // Reseta os valores default manualmente
+        document.querySelector('input[name="estadoCivil"][value="solteiro"]').checked = true;
+        document.getElementById('escolaridade').value = '2completo';
+        document.getElementById('email').focus();
+    }
+</script>
 </body>
 </html>
